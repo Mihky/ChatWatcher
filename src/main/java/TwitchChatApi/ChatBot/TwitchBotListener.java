@@ -22,7 +22,7 @@ public class TwitchBotListener extends ListenerAdapter {
         String channelName = event.getChannelSource();
         String username = event.getUserHostmask().getNick();
         String message = event.getMessage();
-        Date now = new Date(); 
+        Date now = new Date();
 
         System.out.println(String.format(CHAT_LOG_TEMPLATE, username, message));
         System.out.println(event.getChannelSource());
