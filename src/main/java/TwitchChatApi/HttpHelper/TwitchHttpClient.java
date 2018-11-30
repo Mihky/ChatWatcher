@@ -1,5 +1,6 @@
 package TwitchChatApi.HttpHelper;
 
+import TwitchChatApi.ChatBot.TwitchBotListener;
 import TwitchChatApi.configuration.ServiceConfiguration;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -9,6 +10,9 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
+import org.pircbotx.Configuration;
+import org.pircbotx.PircBotX;
+import org.pircbotx.exception.IrcException;
 
 import java.io.IOException;
 
@@ -36,7 +40,20 @@ public class TwitchHttpClient {
                     System.out.println(key + ": " + data.toMap().get(key));
                 }
             }
-        } catch (IOException e) {
+
+            //Configure what we want our bot to do
+            Configuration configuration = new Configuration.Builder()
+                    .setName("PircBotXUser") //Set the nick of the bot. CHANGE IN YOUR CODE
+                    .addServer("irc.chat.twitch.tv", 6697) //Join the freenode network
+                    .addAutoJoinChannel("#pircbotx") //Join the official #pircbotx channel
+                    .addListener(new TwitchBotListener()) //Add our listener that will be called on Events
+                    .buildConfiguration();
+
+            //Create our bot with the configuration
+            PircBotX bot = new PircBotX(configuration);
+            //Connect to the server
+            bot.startBot();
+        } catch (IOException|IrcException e) {
         }
         return "";
     }
